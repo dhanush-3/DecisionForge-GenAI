@@ -1,4 +1,9 @@
 __pycache__/
-*.pyc
 .env
-.ollama/
+*.db
+*.bin
+*.pt
+*.gguf
+*.model
+venv/
+vector_db/

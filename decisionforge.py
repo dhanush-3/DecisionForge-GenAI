@@ -1,26 +1,36 @@
-import requests
+import os
+from groq import Groq
+from dotenv import load_dotenv
 
-MODEL_NAME = "tinyllama"   # use smaller model
+# Load environment variables
+load_dotenv()
+
+# Initialize Groq client
+client = Groq(
+    api_key=os.getenv("GROQ_API_KEY")
+)
 
 
-def ask_local_llm(prompt):
-    response = requests.post(
-        "http://localhost:11434/api/generate",
-        json={
-            "model": MODEL_NAME,
-            "prompt": prompt,
-            "stream": False
-        },
-        timeout=300
-    )
-
-    print("STATUS CODE:", response.status_code)
-    print("RAW TEXT:", response.text)
-
+def ask_groq_llm(prompt):
     try:
-        return response.json().get("response", "No response key found.")
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a professional business decision advisor."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            model="llama3-8b-8192"
+        )
+
+        return chat_completion.choices[0].message.content
+
     except Exception as e:
-        return f"JSON error: {e}"
+        return f"Error occurred: {str(e)}"
 
 
 def generate_decision(problem):
@@ -39,7 +49,7 @@ Provide:
 Be clear and practical.
 """
 
-    return ask_local_llm(prompt)
+    return ask_groq_llm(prompt)
 
 
 if __name__ == "__main__":

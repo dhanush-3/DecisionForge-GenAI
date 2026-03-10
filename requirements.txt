@@ -1,4 +1,13 @@
 streamlit
+groq
+python-dotenv
 requests
-faiss-cpu
+langchain
+langchain-community
 sentence-transformers
+faiss-cpu
+chromadb
+tqdm
+numpy
+pandas
+scikit-learn
